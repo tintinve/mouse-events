@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: papayawhip;
+        }
+
+        #red {
+            width: 20vw;
+            height: 20vw;
+            position: absolute;
+            background-color: coral;
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="red"></div>
+    <script>
+        const red = document.querySelector("#red");
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            document.addEventListener("mousemove", mouseMove);
+        }
+
+        function mouseMove(e) {
+            console.log(e);
+            red.textContent = "X : " + e.pageX +
+                "\n Y : " + e.pageY;
+            red.style.whiteSpace = "pre";
+
+            red.style.left = e.pageX + "px";
+            red.style.top = e.pageY + "px";
+        }
+
+    </script>
+</body>
+
+</html>
