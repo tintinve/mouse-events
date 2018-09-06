@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        #container {
+            position: absolute;
+            background: lightyellow;
+            width: 100vw;
+            height: 80vh;
+        }
+
+        #bg1 {
+            position: absolute;
+            top: 100px;
+            left: 0px;
+            width: 950px;
+        }
+
+        #bg1a {
+            width: 950px;
+            height: 151px;
+            background-image: url(img1.png);
+            background-size: cover;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="bg1">
+            <div id="bg1a"> </div>
+        </div>
+    </div>
+    <script>
+        let container, bg1;
+        let centerX = window.innerWidth / 2; //
+        let mouseX = 0;
+        let RAF;
+        let moving = false;
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            bg1 = document.querySelector("#bg1");
+            bg1.style.left = centerX - (bg1.clientWidth / 2) + "px"; //center
+            console.log(bg1.clientWidth);
+            document.addEventListener("mousemove", mouseMove);
+            bg1.addEventListener("click", toggleRAF);
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+        }
+
+        function toggleRAF(e) {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+            } else {
+                RAF = requestAnimationFrame(moveRAF);
+            }
+            moving = !moving;
+        }
+
+        function moveRAF() {
+            move(bg1, 50);
+            RAF = requestAnimationFrame(moveRAF); // do it again
+        }
+
+        function move(elm, steps) {
+            //console.log(elm.style);
+            let elmPX = elm.offsetLeft;
+
+            elmPX += ((centerX - mouseX) / steps);
+
+            //elm is smaller than stage
+            if (elm.clientWidth < window.innerWidth) {
+                if (elmPX < 0) {
+                    elmPX = 0;
+                }
+                if (elmPX > window.innerWidth - elm.offsetWidth) {
+                    elmPX = window.innerWidth - elm.offsetWidth;
+                }
+            }
+
+            //elm is bigger than stage
+            if (elm.clientWidth > window.innerWidth) {
+                if (elmPX > 0) {
+                    elmPX = 0;
+                }
+                if (elmPX < window.innerWidth - elm.offsetWidth) {
+                    elmPX = window.innerWidth - elm.offsetWidth;
+                }
+            }
+
+            elm.style.left = elmPX + "px";
+        }
+
+    </script>
+</body>
+
+</html>
