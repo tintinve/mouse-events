@@ -26,28 +26,35 @@
     <div id="red"></div>
     <script>
         const red = document.querySelector("#red");
+        let redCX = red.clientWidth / 2;
+        let redCY = red.clientHeight / 2;
+        let mouseX, mouseY;
+        let redPX, redPY;
+        let steps = 30;
 
         document.addEventListener("DOMContentLoaded", init);
 
         function init() {
             document.addEventListener("mousemove", mouseMove);
+            moveRAF();
         }
 
         function mouseMove(e) {
-            console.log(e);
-            red.textContent = "X : " + e.pageX +
-                "\n Y : " + e.pageY;
-            red.style.whiteSpace = "pre";
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
 
-            red.style.left = e.pageX + "px";
-            red.style.top = e.pageY + "px";
+        function moveRAF() {
+            redPX = red.offsetLeft;
+            redPY = red.offsetTop;
 
-            if (e.pageX >= window.innerWidth - red.clientWidth) {
-                red.style.left = window.innerWidth - red.clientWidth + "px";
-            }
-            if (e.pageY >= window.innerHeight - red.clientHeight) {
-                red.style.top = window.innerHeight - red.clientHeight + "px";
-            }
+            redPX += (mouseX - redPX - redCX) / steps;
+            redPY += (mouseY - redPY - redCY) / steps;
+
+            red.style.left = redPX + "px";
+            red.style.top = redPY + "px";
+
+            requestAnimationFrame(moveRAF);
         }
 
     </script>
