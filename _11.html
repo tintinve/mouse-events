@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: papayawhip;
+        }
+
+        #red {
+            width: 20vw;
+            height: 20vw;
+            position: absolute;
+            background-color: coral;
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="red"></div>
+    <script>
+        let red = document.querySelector("#red");
+        let mouseX, mouseY;
+        let redPX, redPY;
+        let redCX = red.clientWidth / 2;
+        let redCY = red.clientHeight / 2;
+        let winCX = window.innerWidth / 2;
+        let winCY = window.innerHeight / 2;
+        let steps = 15;
+        let RAF;
+        let moving = false;
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            red.style.left = winCX - redCX + "px"; //center
+            red.style.top = winCY - redCY + "px"; //middle
+            document.addEventListener("mousemove", mouseMove);
+
+            red.addEventListener("click", toggleRAF);
+        }
+
+        function toggleRAF() {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+                red.style.background = "tomato";
+            } else {
+                RAF = requestAnimationFrame(moveRAF);
+                red.style.background = "dodgerblue";
+            }
+            moving = !moving;
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+        //distance = target - source / steps
+        function moveRAF() {
+            redPX = red.offsetLeft;
+            redPY = red.offsetTop;
+
+            redPX += (winCX - mouseX) / steps;
+            redPY += (winCY - mouseY) / steps;
+
+            if (redPX < 0) {
+                redPX = 0;
+            }
+            if (redPY < 0) {
+                redPY = 0;
+            }
+            if (redPX > window.innerWidth - red.offsetWidth) {
+                redPX = window.innerWidth - red.offsetWidth;
+            }
+            if (redPY > window.innerHeight - red.offsetHeight) {
+                redPY = window.innerHeight - red.offsetHeight;
+            }
+
+            red.style.left = redPX + "px";
+            red.style.top = redPY + "px";
+
+            RAF = requestAnimationFrame(moveRAF);
+        }
+
+    </script>
+</body>
+
+</html>
