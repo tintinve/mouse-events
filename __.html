@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: papayawhip;
+        }
+
+        #bg1 {
+            width: calc(120vw*2);
+            height: calc(86vw*2);
+            position: absolute;
+            background-image: url(peach.gif);
+            background-size: cover;
+        }
+
+        #magenta,
+        #yellow,
+        #cyan {
+            width: 20vw;
+            height: 20vw;
+            position: absolute;
+        }
+
+        #magenta {
+            background: magenta;
+        }
+
+        #yellow {
+            background: yellow;
+        }
+
+        #cyan {
+            background: aqua;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="magenta"></div>
+    <div id="yellow"></div>
+    <div id="cyan"></div>
+
+    <script>
+        const magenta = document.querySelector("#magenta");
+        const yellow = document.querySelector("#yellow");
+        const cyan = document.querySelector("#cyan");
+
+        let mouseX, mouseY;
+        let mycCX = magenta.clientWidth / 2;
+        let mycCY = magenta.clientHeight / 2;
+        let winCX = window.innerWidth / 2;
+        let winCY = window.innerHeight / 2;
+        const RAF;
+        let moving = false;
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            magenta.style.left = winCX - mycCX + "px"; //center
+            magenta.style.top = winCY - mycCY + "px"; //middle
+            yellow.style.left = winCX - mycCX + "px"; //center
+            yellow.style.top = winCY - mycCY + "px"; //middle
+            cyan.style.left = winCX - mycCX + "px"; //center
+            cyan.style.top = winCY - mycCY + "px"; //middle
+
+            document.addEventListener("mousemove", mouseMove);
+
+            magenta.addEventListener("click", toggleRAF);
+            yellow.addEventListener("click", toggleRAF);
+            cyan.addEventListener("click", toggleRAF);
+        }
+
+        function toggleRAF(e) {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+            } else {
+                RAF = requestAnimationFrame(moveRAF);
+            }
+            moving = !moving;
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+
+    </script>
+</body>
+
+</html>
