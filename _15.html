@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: papayawhip;
+        }
+
+        #bg1 {
+            width: calc(120vw*2);
+            height: calc(86vw*2);
+            position: absolute;
+            background-image: url(peach.gif);
+            background-size: cover;
+        }
+
+        #bg2 {
+            width: calc(102.4vw*3);
+            height: calc(76.8vw*3);
+            position: absolute;
+            background-image: url(bw.gif);
+            background-size: 100% 100%;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        #magenta,
+        #yellow,
+        #cyan {
+            width: 20vw;
+            height: 20vw;
+            position: absolute;
+        }
+
+        #magenta {
+            background: magenta;
+        }
+
+        #yellow {
+            background: yellow;
+        }
+
+        #cyan {
+            background: aqua;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="bg1"></div>
+    <div id="bg2"></div>
+
+    <div id="magenta"></div>
+    <div id="yellow"></div>
+    <div id="cyan"></div>
+
+    <script>
+        let bg1 = document.querySelector("#bg1");
+        let bg2 = document.querySelector("#bg2");
+        let magenta = document.querySelector("#magenta");
+        let yellow = document.querySelector("#yellow");
+        let cyan = document.querySelector("#cyan");
+
+        let mouseX, mouseY;
+        let mycCX = magenta.clientWidth / 2;
+        let mycCY = magenta.clientHeight / 2;
+        let winCX = window.innerWidth / 2;
+        let winCY = window.innerHeight / 2;
+        let RAF;
+        let moving = false;
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            bg1.style.left = winCX - (bg1.clientWidth / 2); + "px";
+            bg1.style.top = winCY - (bg1.clientTop / 2); + "px";
+            bg2.style.left = winCX - (bg2.clientWidth / 2); + "px";
+            bg2.style.top = winCY - (bg2.clientTop / 2); + "px";
+            magenta.style.left = winCX - mycCX + "px"; //center
+            magenta.style.top = winCY - mycCY + "px"; //middle
+            yellow.style.left = winCX - mycCX + "px"; //center
+            yellow.style.top = winCY - mycCY + "px"; //middle
+            cyan.style.left = winCX - mycCX + "px"; //center
+            cyan.style.top = winCY - mycCY + "px"; //middle
+
+            document.addEventListener("mousemove", mouseMove);
+            bg1.addEventListener("click", toggleRAF);
+            bg2.addEventListener("click", toggleRAF);
+            magenta.addEventListener("click", toggleRAF);
+            yellow.addEventListener("click", toggleRAF);
+            cyan.addEventListener("click", toggleRAF);
+        }
+
+        function toggleRAF(e) {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+            } else {
+                RAF = requestAnimationFrame(moveRAF);
+            }
+            moving = !moving;
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+        //distance = target - source / steps
+        function moveRAF() {
+            move(bg1, 80);
+            move(bg2, 40);
+            move(magenta, 100);
+            move(yellow, 60);
+            move(cyan, 20);
+            RAF = requestAnimationFrame(moveRAF);
+        }
+
+        function move(elm, steps) {
+            let elmPX = elm.offsetLeft;
+            let elmPY = elm.offsetTop;
+
+            elmPX += (winCX - mouseX) / steps;
+            elmPY += (winCY - mouseY) / steps;
+
+
+            //if element is smaller than stage
+            if (elm.clientWidth < window.innerWidth) {
+                if (elmPX < 0) {
+                    elmPX = 0;
+                }
+                if (elmPY < 0) {
+                    elmPY = 0;
+                }
+                if (elmPX > window.innerWidth - elm.offsetWidth) {
+                    elmPX = window.innerWidth - elm.offsetWidth;
+                }
+                if (elmPY > window.innerHeight - elm.offsetHeight) {
+                    elmPY = window.innerHeight - elm.offsetHeight;
+                }
+            }
+
+            // if element is bigger than stage
+            if (elm.clientWidth > window.innerWidth) {
+                if (elmPX > 0) {
+                    elmPX = 0;
+                }
+                if (elmPY > 0) {
+                    elmPY = 0;
+                }
+                if (elmPX < window.innerWidth - elm.offsetWidth) {
+                    elmPX = window.innerWidth - elm.offsetWidth;
+                }
+                if (elmPY < window.innerHeight - elm.offsetHeight) {
+                    elmPY = window.innerHeight - elm.offsetHeight;
+                }
+            }
+            elm.style.left = elmPX + "px";
+            elm.style.top = elmPY + "px";
+        }
+
+    </script>
+</body>
+
+</html>
