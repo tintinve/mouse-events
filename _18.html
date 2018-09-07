@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: papayawhip;
+        }
+
+        #bg1 {
+            width: calc(950px*2*1.5);
+            position: absolute;
+        }
+
+        #bg1a {
+            width: calc(950px*1.5);
+            height: calc(151px*1.5);
+            position: absolute;
+            background-image: url(img1.png);
+            background-size: cover;
+            left: 0;
+        }
+
+        #bg1b {
+            width: calc(950px*1.5);
+            height: calc(151px*1.5);
+            position: absolute;
+            background-image: url(img1.png);
+            background-size: cover;
+            left: calc(950px*1.5);
+        }
+
+        #bg2 {
+            width: calc(1250px*1.5*2);
+            height: calc(166px*1.5*2);
+            position: absolute;
+        }
+
+        #bg2a {
+            width: calc(1250px*1.5);
+            height: calc(166px*1.5);
+            position: absolute;
+            background-image: url(img2.png);
+            background-size: cover;
+            left: 0;
+        }
+
+        #bg2b {
+            width: calc(1250px*1.5);
+            height: calc(166px*1.5);
+            position: absolute;
+            background-image: url(img2.png);
+            background-size: cover;
+            left: calc(1250px*1.5);
+        }
+
+        #bg3 {
+            width: calc(1250px*1.5*2);
+            height: calc(202px*1.5*2);
+            position: absolute;
+        }
+
+        #bg3a {
+            width: calc(1250px*1.5);
+            height: calc(202px*1.5);
+            position: absolute;
+            background-image: url(img3.png);
+            background-size: cover;
+            left: 0;
+        }
+
+        #bg3b {
+            width: calc(1250px*1.5);
+            height: calc(202px*1.5);
+            position: absolute;
+            background-image: url(img3.png);
+            background-size: cover;
+            left: calc(1250px*1.5);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="bg1">
+        <div id="bg1a"></div>
+        <div id="bg1b"></div>
+    </div>
+    <div id="bg2">
+        <div id="bg2a"></div>
+        <div id="bg2b"></div>
+    </div>
+    <div id="bg3">
+        <div id="bg3a"></div>
+        <div id="bg3b"></div>
+    </div>
+
+    <script>
+        let bg1 = document.querySelector("#bg1");
+        let bg2 = document.querySelector("#bg2");
+        let winCX = window.innerWidth / 2;
+        let mouseX;
+        let bg1CX = bg1.clientWidth / 2;
+        let bg2CX = bg2.clientWidth / 2;
+        let bg3CX = bg3.clientWidth / 2;
+        let RAF;
+        let moving = false;
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            bg1.style.left = winCX - bg1CX + "px";
+            bg2.style.left = winCX - bg2CX + "px";
+            bg3.style.left = winCX - bg3CX + "px";
+            console.log(bg1.clientWidth);
+
+            document.addEventListener("mousemove", mouseMove);
+            bg1.addEventListener("click", toggleRAF);
+            bg2.addEventListener("click", toggleRAF);
+            bg3.addEventListener("click", toggleRAF);
+        }
+
+        function toggleRAF(e) {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+            } else {
+                RAF = requestAnimationFrame(moveRAF);
+            }
+            moving = !moving;
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+        }
+        //distance = target - source / steps
+        function moveRAF() {
+            move(bg1, 120);
+            move(bg2, 80);
+            move(bg3, 40);
+            RAF = requestAnimationFrame(moveRAF);
+        }
+
+        function move(elm, steps) {
+            let elmPX = elm.offsetLeft;
+
+            elmPX += (winCX - mouseX) / steps;
+
+            if (elm.offsetLeft > 0) {
+                elmPX = -elm.clientWidth / 2;
+            }
+            if (elmPX < window.innerWidth - elm.offsetWidth) {
+                elmPX = window.innerWidth - (elm.offsetWidth / 2);
+            }
+
+            elm.style.left = elmPX + "px";
+        }
+
+    </script>
+</body>
+
+</html>
