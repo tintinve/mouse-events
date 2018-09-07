@@ -108,7 +108,6 @@
         function mouseMove(e) {
             let x = e.offsetX;
             let y = e.offsetY;
-            console.log(this, e.target, "x", x, e.target.offsetLeft, "dist", );
             if (this !== e.target) {
                 x += e.target.offsetLeft;
                 y += e.target.offsetTop;
@@ -118,7 +117,7 @@
             const distX = (centerX - x) / (centerX);
             const distY = (centerY - y) / (centerY);
 
-
+            console.log(this, e.target, "x", x, e.target.offsetLeft, "dist", distX);
             //console.log(`(x,y)=(${x},${y}), dist ${distX}`);
 
             // move top

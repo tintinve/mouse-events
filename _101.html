@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #drag {
+            cursor: move;
+            position: absolute;
+        }
+
+        #container {
+            position: relative;
+            overflow: hidden;
+            background: aliceblue;
+            width: 100vw;
+            height: 90vh;
+        }
+
+        .button {
+            width: 30vw;
+            height: 10vh;
+            background: papayawhip;
+        }
+
+    </style>
+</head>
+
+<body>
+    <input type="button" id="zoomout" class="button" value="Zoom out">
+    <input type="button" id="zoomin" class="button" value="Zoom in">
+    <div id="container">
+        <img id="drag" src="bw.gif" />
+    </div>
+</body>
+
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", init);
+
+    let drag, container, zoomin, zoomout;
+    let dragging = false,
+        x_drag = 0,
+        y_drag = 0;
+
+    function init() {
+        drag = document.querySelector('#drag');
+        container = document.querySelector('#container');
+
+        drag.addEventListener('mousedown', start_drag);
+        drag.addEventListener('mousemove', while_drag);
+        drag.addEventListener('mouseup', stop_drag);
+        drag.addEventListener('mouseleave', stop_drag);
+
+        document.querySelector("#zoomout").addEventListener('click', () => {
+            zoom(drag, 0.5);
+        });
+        document.querySelector("#zoomin").addEventListener('click', () => {
+            zoom(drag, 1.5);
+        });
+    }
+
+    function start_drag(e) {
+        e.preventDefault(); // to get rid og the image dragging preview
+        dragging = true;
+        //where is it clicked: local click - offsetLeft is a translationto page's X
+        x_drag = e.clientX - drag.offsetLeft;
+        y_drag = e.clientY - drag.offsetTop;
+        console.log(x_drag);
+    }
+
+    function stop_drag() {
+        dragging = false;
+    }
+
+    function while_drag(e) {
+        if (dragging !== false) {
+            drag.style.left = (e.clientX - x_drag) + 'px';
+            drag.style.top = (e.clientY - y_drag) + 'px';
+            // console.log(drag.style.left + ' - ' + drag.style.top);
+        }
+    }
+
+    function zoom(elm, zoomincrement) {
+        let pre_width = drag.getBoundingClientRect().width,
+            pre_height = drag.getBoundingClientRect().height;
+        elm.style.width = (pre_width * zoomincrement) + 'px';
+        elm.style.height = (pre_height * zoomincrement) + 'px';
+    }
+
+</script>
