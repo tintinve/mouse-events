@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D planes</title>
+    <style>
+        body {
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+
+        #stage {
+            position: relative;
+            background-color: rgb(142, 142, 142);
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #top {
+            position: absolute;
+            width: 30vw;
+            height: 30vw;
+            left: calc(50vw - 30vw / 2);
+            top: calc(50vh - 30vw / 2);
+            background-color: red;
+        }
+
+        #middle {
+            position: absolute;
+            width: 30vw;
+            height: 30vw;
+            left: calc(50vw - 30vw / 2);
+            top: calc(50vh - 30vw / 2);
+            background-color: greenyellow;
+        }
+
+        #bottom {
+            position: absolute;
+            width: 30vw;
+            height: 30vw;
+            left: calc(50vw - 30vw / 2);
+            top: 19vw;
+            background-color: blueviolet;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Wow - almost 3D</h1>
+
+    <div id="stage">
+        <div id="bottom">Bottom</div>
+        <div id="middle">Middle</div>
+        <div id="top">Top</div>
+    </div>
+
+
+    <script>
+        "use strict";
+
+        const stage = document.querySelector("#stage");
+
+        const centerX = stage.clientWidth / 2;
+        const centerY = stage.clientHeight / 2;
+
+        let factor = 50;
+
+
+        stage.addEventListener("mousemove", mouseMove);
+
+
+        function mouseMove(e) {
+            let x = e.offsetX;
+            let y = e.offsetY;
+            console.log(this, e.target, "x", x, e.target.offsetLeft, "dist", );
+            if (this !== e.target) {
+                x += e.target.offsetLeft;
+                y += e.target.offsetTop;
+            }
+
+
+            const distX = (centerX - x) / (centerX);
+            const distY = (centerY - y) / (centerY);
+
+
+            //console.log(`(x,y)=(${x},${y}), dist ${distX}`);
+
+            // move top
+            const upper = document.querySelector("#top");
+            upper.style.left = centerX - upper.clientWidth / 2 + (distX * factor) + "px";
+            upper.style.top = centerY - upper.clientHeight / 2 + (distY * factor) + "px";
+
+            const lower = document.querySelector("#bottom");
+            lower.style.left = centerX - lower.clientWidth / 2 - (distX * factor) + "px";
+            lower.style.top = centerY - lower.clientHeight / 2 - (distY * factor) + "px";
+        }
+
+    </script>
+</body>
+
+</html>
