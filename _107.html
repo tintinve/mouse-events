@@ -42,111 +42,111 @@
             </p>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", init);
+
+        /**
+         * Thank you very much for inspiration mouse touch pointer
+         * Hans Eklund, North Kingdom
+         * https://codepen.io/hanseklund/pen/qDxvo
+         */
+
+        var dragging = false;
+        var startX = 0;
+        var startY = 0;
+        var containerWidth;
+        var containerHeight;
+        var plateWidth;
+        var plateHeight;
+
+        function init() {
+
+            var container = document.getElementById('container');
+            var plate = document.getElementById('plate');
+            containerWidth = container.getBoundingClientRect().width;
+            containerHeight = container.getBoundingClientRect().height;
+            plateWidth = plate.getBoundingClientRect().width;
+            plateHeight = plate.getBoundingClientRect().height;
+
+            // listeners
+            plate.addEventListener('touchstart', onTouchStart);
+            plate.addEventListener('mousedown', onPlateMouseDown);
+        }
+
+
+        /*
+         * Events
+         */
+
+        function onPlateMouseDown(event) {
+            event.preventDefault();
+            document.addEventListener('mouseup', onDocumentMouseUp);
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            handleDragStart(event.clientX, event.clientY);
+        }
+
+        function onDocumentMouseMove(event) {
+            if (dragging) handleDragging(event.clientX, event.clientY);
+        }
+
+        function onDocumentMouseUp(event) {
+            document.removeEventListener('mouseup', onDocumentMouseUp);
+            document.removeEventListener('mousemove', onDocumentMouseMove);
+            event.preventDefault();
+            handleDragStop();
+        }
+
+        function onTouchStart(event) {
+            event.preventDefault();
+            if (event.touches.length === 1) {
+                handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
+                document.addEventListener('touchmove', onTouchMove);
+                document.addEventListener('touchend', onTouchEnd);
+                document.addEventListener('touchcancel', onTouchEnd);
+            }
+        }
+
+        function onTouchMove(event) {
+            event.preventDefault();
+            if (event.touches.length === 1) {
+                handleDragging(event.touches[0].clientX, event.touches[0].clientY);
+            }
+        }
+
+        function onTouchEnd(event) {
+            event.preventDefault();
+            if (event.touches.length === 0) {
+                handleDragStop();
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', onTouchEnd);
+                document.removeEventListener('touchcancel', onTouchEnd);
+            }
+        }
+
+        function handleDragStart(x, y) {
+            dragging = true;
+            startX = x;
+            startY = y;
+        }
+
+        function handleDragging(x, y) {
+            if (dragging) {
+                let difX = (x - startX);
+                let difY = (y - startY);
+                plate.style.width = plateWidth + difX + "px";
+                plate.style.height = plateHeight + difY + "px";
+            }
+        }
+
+        function handleDragStop() {
+            if (dragging) {
+                dragging = false;
+            }
+            plateWidth = plate.getBoundingClientRect().width;
+            plateHeight = plate.getBoundingClientRect().height;
+        }
+
+    </script>
 </body>
 
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", init);
-
-    /**
-     * Thank you very much for inspiration mouse touch pointer
-     * Hans Eklund, North Kingdom
-     * https://codepen.io/hanseklund/pen/qDxvo
-     */
-
-    var dragging = false;
-    var startX = 0;
-    var startY = 0;
-    var containerWidth;
-    var containerHeight;
-    var plateWidth;
-    var plateHeight;
-
-    function init() {
-
-        var container = document.getElementById('container');
-        var plate = document.getElementById('plate');
-        containerWidth = container.getBoundingClientRect().width;
-        containerHeight = container.getBoundingClientRect().height;
-        plateWidth = plate.getBoundingClientRect().width;
-        plateHeight = plate.getBoundingClientRect().height;
-
-        // listeners
-        plate.addEventListener('touchstart', onTouchStart);
-        plate.addEventListener('mousedown', onPlateMouseDown);
-    }
-
-
-    /*
-     * Events
-     */
-
-    function onPlateMouseDown(event) {
-        event.preventDefault();
-        document.addEventListener('mouseup', onDocumentMouseUp);
-        document.addEventListener('mousemove', onDocumentMouseMove);
-        handleDragStart(event.clientX, event.clientY);
-    }
-
-    function onDocumentMouseMove(event) {
-        if (dragging) handleDragging(event.clientX, event.clientY);
-    }
-
-    function onDocumentMouseUp(event) {
-        document.removeEventListener('mouseup', onDocumentMouseUp);
-        document.removeEventListener('mousemove', onDocumentMouseMove);
-        event.preventDefault();
-        handleDragStop();
-    }
-
-    function onTouchStart(event) {
-        event.preventDefault();
-        if (event.touches.length === 1) {
-            handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
-            document.addEventListener('touchmove', onTouchMove);
-            document.addEventListener('touchend', onTouchEnd);
-            document.addEventListener('touchcancel', onTouchEnd);
-        }
-    }
-
-    function onTouchMove(event) {
-        event.preventDefault();
-        if (event.touches.length === 1) {
-            handleDragging(event.touches[0].clientX, event.touches[0].clientY);
-        }
-    }
-
-    function onTouchEnd(event) {
-        event.preventDefault();
-        if (event.touches.length === 0) {
-            handleDragStop();
-            document.removeEventListener('touchmove', onTouchMove);
-            document.removeEventListener('touchend', onTouchEnd);
-            document.removeEventListener('touchcancel', onTouchEnd);
-        }
-    }
-
-    function handleDragStart(x, y) {
-        dragging = true;
-        startX = x;
-        startY = y;
-    }
-
-    function handleDragging(x, y) {
-        if (dragging) {
-            let difX = (x - startX);
-            let difY = (y - startY);
-            plate.style.width = plateWidth + difX + "px";
-            plate.style.height = plateHeight + difY + "px";
-        }
-    }
-
-    function handleDragStop() {
-        if (dragging) {
-            dragging = false;
-        }
-        plateWidth = plate.getBoundingClientRect().width;
-        plateHeight = plate.getBoundingClientRect().height;
-    }
-
-</script>
