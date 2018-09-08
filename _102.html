@@ -76,38 +76,32 @@
         mouseX = e.clientX;
         mouseY = e.clientY;
 
-        //where is it clicked: local click - offsetLeft is a translationto page's X
+        //where is it clicked: mouse's distance to drag's position
         x_drag = e.clientX - drag.offsetLeft;
         y_drag = e.clientY - drag.offsetTop;
 
         RAF = requestAnimationFrame(moveRAF);
-        console.log(x_drag);
+        //console.log(x_drag);
     }
 
     function moveRAF() {
 
-        dragPX = drag.getBoundingClientRect().x;
-        dragPY = drag.getBoundingClientRect().y;
-        //dragPX = drag.offsetLeft;
-        //dragPY = drag.offsetTop;
+        dragPX = drag.offsetLeft;
+        dragPY = drag.offsetTop;
 
-        dragPX += (mouseX - dragPX - x_drag) / steps;
-        dragPY += (mouseY - dragPY - y_drag) / steps;
+        dragPX += ((mouseX - x_drag) - dragPX) / steps;
+        dragPY += ((mouseY - y_drag) - dragPY) / steps;
 
+        // Here we need some border restrictions
 
         drag.style.left = dragPX + 'px';
         drag.style.top = dragPY + 'px';
 
-
-
-
         RAF = requestAnimationFrame(moveRAF);
-
     }
 
     function while_drag(e) {
         if (dragging !== false) {
-
             mouseX = e.clientX;
             mouseY = e.clientY;
             // console.log(drag.style.left + ' - ' + drag.style.top);
@@ -118,8 +112,6 @@
         cancelAnimationFrame(RAF);
         dragging = false;
     }
-
-
 
 
     function zoom(elm, zoomincrement) {

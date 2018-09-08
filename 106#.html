@@ -23,11 +23,12 @@
             background: aliceblue;
             width: 100vw;
             height: 90vh;
+            overflow: hidden;
         }
 
         #plate {
             position: absolute;
-            background: thistle;
+            background: orchid;
             border: 4px solid magenta;
             width: 25vw;
             height: 25vw;
@@ -45,7 +46,6 @@
         </div>
         <div id="plate"></div>
     </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", init);
 
@@ -55,25 +55,31 @@
          * https://codepen.io/hanseklund/pen/qDxvo
          */
 
-        var input = {
+        let input = {
             dragging: false
         };
+        let platePX = 0;
+        let platePY = 0;
         let container, plate;
-        let platePX, platePY;
+        //let dragging = false;
         let x_plate, y_plate;
         let mouseX, mouseY;
         let RAF;
-        let steps = 20;
+        let steps = 50;
+
 
         function init() {
+
             container = document.querySelector('#container');
+            let containerRect = container.getBoundingClientRect();
             plate = document.querySelector('#plate');
+            let plateRect = plate.getBoundingClientRect();
 
-            platePX = (container.clientWidth * 0.5) - (plate.clientWidth / 2);
-            platePY = (container.clientHeight * 0.5) - (plate.clientHeight / 2);
-
-            plate.style.left = platePX + "px";
-            plate.style.top = platePY + "px";
+            platePX = (containerRect.width * 0.5) - (plateRect.width / 2);
+            platePY = (containerRect.height * 0.5) - (plateRect.height / 2);
+            //platePX = (container.clientWidth * 0.5) - (plate.clientWidth / 2);
+            //platePY = (container.clientHeight * 0.5) - (plate.clientHeight / 2);
+            plate.style.transform = 'translate(' + platePX + 'px,' + platePY + 'px) translateZ(0) scale(1)';
 
             // listeners
             if (window.PointerEvent) {
@@ -83,40 +89,45 @@
                 plate.addEventListener('touchstart', onTouchStart);
                 plate.addEventListener('mousedown', onPlateMouseDown);
             }
+
+            console.log("000", platePX, platePY);
+            //onAnimationFrame();
         }
 
         function onAnimationFrame() {
-            // where are you right now
-            platePX = plate.offsetLeft;
-            platePY = plate.offsetTop;
+            //plateRect = plate.getBoundingClientRect();
+            platePX = plate.getBoundingClientRect().left;
+            platePY = plate.getBoundingClientRect().top;
+            console.log("anim", platePX, platePY);
 
-            // Step you need to add: (real target - src) / steps
-            platePX += ((mouseX - x_plate) - platePX) / steps;
-            platePY += ((mouseY - y_plate) - platePY) / steps;
+            platePX += (mouseX - platePX - x_plate) / steps;
+            platePY += (mouseY - platePY - y_plate) / steps;
 
-            //restict horizontally
-            if (platePX < 0) platePX = 0;
-            else if (platePX > container.clientWidth - plate.clientWidth) platePX = container.clientWidth - plate.clientWidth;
+            /*
+                    //restict horizontally
+                    if (platePX < 0) platePX = 0;
+                    else if (platePX > containerRect.width - plateRect.width) platePX = containerRect.width - plateRect.width;
 
-            //restict vertically
-            if (platePY < 0) platePY = 0;
-            else if (platePY > container.clientHeight - plate.clientHeight) platePY = container.clientHeight - platePY.clientHeight;
-
+                    //restict vertically
+                    if (platePY < 0) platePY = 0;
+                    else if (platePY > containerRect.height - plateRect.height) platePY = containerRect.height - plateRect.height;
+            */
             //set the transform
-            plate.style.left = platePX + "px";
-            plate.style.top = platePY + "px";
+            plate.style.transform = 'translate(' + platePX + 'px,' + platePY + 'px) translateZ(0)  scale(1)';
 
-            RAF = requestAnimationFrame(onAnimationFrame); // do it again fast
+            RAF = requestAnimationFrame(onAnimationFrame);
+
         }
 
         function handleDragStart(x, y) {
             input.dragging = true;
             mouseX = x;
             mouseY = y;
-            //where about is it clicked = distance from mousepos. to elementpos.
-            x_plate = mouseX - plate.offsetLeft;
-            y_plate = mouseY - plate.offsetTop;
+
+            x_plate = x - plate.getBoundingClientRect().left;
+            y_plate = y - plate.getBoundingClientRect().top;
             console.log("start", input.dragging);
+            //console.log("start", x, y, "x_plate", x_plate, plate.style.left);
             onAnimationFrame();
         }
 
@@ -130,15 +141,14 @@
 
         function handleDragStop() {
             if (input.dragging) {
+                input.dragging = false;
                 cancelAnimationFrame(RAF);
-                dragging = false;
             }
             console.log("stop", input.dragging);
         }
 
-
         /*
-         ******************************** Events
+         * Events
          */
 
         function onPlateMouseDown(event) {
@@ -216,6 +226,7 @@
             } else {
                 input.pointers[pointerIndex] = event;
             }
+
             if (input.pointers.length === 1) {
                 handleDragging(input.pointers[0].clientX, input.pointers[0].clientY);
             }
@@ -223,9 +234,12 @@
 
         function pointerUpHandler(event) {
             var pointerIndex = indexOfPointer(event.pointerId);
-            if (pointerIndex < 0) {} else {
+            if (pointerIndex < 0) {
+
+            } else {
                 input.pointers.splice(pointerIndex, 1);
             }
+
             if (input.pointers.length === 0 && input.dragging) {
                 handleDragStop();
                 window.removeEventListener("pointermove", pointerMoveHandler, false);
