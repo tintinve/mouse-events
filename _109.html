@@ -21,7 +21,7 @@
         #container {
             background: lightyellow;
             width: 100vw;
-            height: 90vh;
+            height: 100vh;
         }
 
         #plate {
@@ -58,192 +58,177 @@
         <div id="target2" class="target"></div>
         <div id="plate"></div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", init);
+
+        let input = {
+            dragging: false
+        };
+        let container, plate, target1, target2;
+        let targets = [];
+        let platePX, platePY;
+        let x_plate, y_plate;
+        let mouseX, mouseY;
+        let RAF;
+        let steps = 20;
+        let snapX, snapY;
+
+        function init() {
+
+            container = document.querySelector('#container');
+            plate = document.querySelector('#plate');
+            target1 = document.querySelector('#target1');
+            target2 = document.querySelector('#target2');
+            targets = document.querySelectorAll(".target");
+
+            platePX = (container.clientWidth * 0.5) - (plate.clientWidth / 2);
+            platePY = (container.clientHeight * 0.5) - (plate.clientHeight / 2);
+
+            plate.style.left = platePX + "px";
+            plate.style.top = platePY + "px";
+
+            //snapX = target1.offsetLeft + ((target1.clientWidth - plate.clientWidth) / 2);
+            //snapY = target1.offsetTop + ((target1.clientHeight - plate.clientHeight) / 2);
+            snapX = target1.offsetLeft + (target1.offsetWidth / 2) - (plate.offsetWidth / 2);
+            snapY = target1.offsetTop + (target1.offsetHeight / 2) - (plate.offsetHeight / 2);
+
+            // listeners
+
+            plate.addEventListener('touchstart', onTouchStart);
+            plate.addEventListener('mousedown', onPlateMouseDown);
+        }
+
+
+        function onAnimationFrame() {
+            // where are you right now
+            platePX = plate.offsetLeft;
+            platePY = plate.offsetTop;
+
+            // Step you need to add: (real target - src) / steps
+            platePX += ((mouseX - x_plate) - platePX) / steps;
+            platePY += ((mouseY - y_plate) - platePY) / steps;
+
+            //restict horizontally
+            if (platePX < 0) platePX = 0;
+            else if (platePX > container.clientWidth - plate.clientWidth) platePX = container.clientWidth - plate.clientWidth;
+
+            //restict vertically
+            if (platePY < 0) platePY = 0;
+            else if (platePY > container.clientHeight - plate.clientHeight) platePY = container.clientHeight - platePY.clientHeight;
+
+            //set the transform
+            plate.style.left = platePX + "px";
+            plate.style.top = platePY + "px";
+
+            RAF = requestAnimationFrame(onAnimationFrame); // do it again fast
+        }
+
+        function handleDragStart(x, y) {
+            input.dragging = true;
+            mouseX = x;
+            mouseY = y;
+            //where about is it clicked = distance from mousepos. to elementpos.
+            x_plate = mouseX - plate.offsetLeft;
+            y_plate = mouseY - plate.offsetTop;
+            console.log("start", input.dragging);
+            onAnimationFrame();
+        }
+
+        function handleDragging(x, y) {
+            console.log("while", x, y);
+            if (input.dragging) {
+                mouseX = x;
+                mouseY = y;
+            }
+            handleCollision(platePX, platePY);
+        }
+
+        function handleDragStop() {
+            if (input.dragging) {
+                cancelAnimationFrame(RAF);
+                input.dragging = false;
+            }
+            console.log("stop", input.dragging);
+        }
+
+        function handleCollision(x, y) {
+            targets.forEach(target => {
+                if (x > target.offsetLeft && x < target.offsetLeft + target.clientWidth && y > target.offsetTop && y < target.offsetTop + target.clientHeight) {
+
+                    console.log(target);
+                    target.style.borderStyle = "dotted";
+                    if (target == targets[0]) {
+                        handleDragStop();
+                        plate.style.transform = 'translate(' + snapX + 'px,' + snapY + 'px) translateZ(0) scale(1)';
+                        plate.style.transition = "background 1s";
+                        plate.style.background = "tomato";
+                        //plate.style.left = snapX + "px";
+                        //plate.style.top = snapY + "px";
+                        plate.removeEventListener('touchstart', onTouchStart);
+                        plate.removeEventListener('mousedown', onPlateMouseDown);
+                    }
+                } else {
+                    target.style.borderStyle = "solid";
+                }
+            });
+        }
+
+
+        /*
+         **************************** Events
+         */
+
+        function onPlateMouseDown(event) {
+            event.preventDefault();
+            document.addEventListener('mouseup', onDocumentMouseUp);
+            document.addEventListener('mousemove', onDocumentMouseMove);
+            handleDragStart(event.clientX, event.clientY);
+        }
+
+        function onDocumentMouseMove(event) {
+            if (input.dragging) handleDragging(event.clientX, event.clientY);
+        }
+
+        function onDocumentMouseUp(event) {
+            document.removeEventListener('mouseup', onDocumentMouseUp);
+            document.removeEventListener('mousemove', onDocumentMouseMove);
+            event.preventDefault();
+            handleDragStop();
+        }
+
+        function onTouchStart(event) {
+            plate.textContent += " start";
+            event.preventDefault();
+            if (event.touches.length === 1) {
+                handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
+                document.addEventListener('touchmove', onTouchMove);
+                document.addEventListener('touchend', onTouchEnd);
+                document.addEventListener('touchcancel', onTouchEnd);
+            }
+        }
+
+        function onTouchMove(event) {
+            plate.textContent += " move";
+            event.preventDefault();
+            if (event.touches.length === 1) {
+                handleDragging(event.touches[0].clientX, event.touches[0].clientY);
+            }
+        }
+
+        function onTouchEnd(event) {
+            plate.textContent += " end";
+            event.preventDefault();
+            if (event.touches.length === 0) {
+                handleDragStop(input.dragX, input.dragY);
+                document.removeEventListener('touchmove', onTouchMove);
+                document.removeEventListener('touchend', onTouchEnd);
+                document.removeEventListener('touchcancel', onTouchEnd);
+            }
+        }
+
+    </script>
+
 </body>
 
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", init);
-
-    /**
-     * Thank you very much for heavyinspiration
-     * Hans Eklund, North Kingdom
-     * https://codepen.io/hanseklund/pen/qDxvo
-     */
-
-    var input = {
-        dragStartX: 0,
-        dragStartY: 0,
-        dragX: 0,
-        dragY: 0,
-        dragDX: 0,
-        dragDY: 0
-    };
-    var posX = 0;
-    var posY = 0;
-    var velocityX = 0;
-    var velocityY = 0;
-    var containerWidth;
-    var containerHeight;
-    var plate;
-    var plateWidth;
-    var plateHeight;
-    var targets = [];
-    var snapX, snapY;
-    var dragging = false;
-
-    function init() {
-
-        var container = document.getElementById('container');
-        plate = document.getElementById('plate');
-        var target1 = document.getElementById('target1');
-        var target2 = document.getElementById('target2');
-        targets = document.querySelectorAll(".target");
-        containerWidth = container.getBoundingClientRect().width;
-        containerHeight = container.getBoundingClientRect().height;
-        plateWidth = plate.getBoundingClientRect().width;
-        plateHeight = plate.getBoundingClientRect().height;
-        snapX = target1.offsetLeft + ((target1.getBoundingClientRect().width - plateWidth) / 2);
-        snapY = target1.offsetTop + ((target1.getBoundingClientRect().height - plateHeight) / 2);
-
-
-        // listeners
-
-        plate.addEventListener('touchstart', onTouchStart);
-        plate.addEventListener('mousedown', onPlateMouseDown);
-
-
-        posX = (containerWidth * 0.5) - (plateWidth / 2);
-        posY = (containerHeight * 0.5) - (plateHeight / 2);
-
-        onAnimationFrame();
-
-    }
-
-    function onAnimationFrame() {
-
-        requestAnimationFrame(onAnimationFrame);
-
-        if (input.dragDX !== 0) velocityX = input.dragDX;
-        if (input.dragDY !== 0) velocityY = input.dragDY;
-
-        posX += velocityX;
-        posY += velocityY;
-
-        //restict horizontally
-        if (posX < 0) posX = 0;
-        else if (posX > containerWidth - plateWidth) posX = containerWidth - plateWidth;
-
-        //restict vertically
-        if (posY < 0) posY = 0;
-        else if (posY > containerHeight - plateHeight) posY = containerHeight - plateHeight;
-
-        //set the transform
-        plate.style.transform = 'translate(' + posX + 'px,' + posY + 'px) translateZ(0) scale(1)';
-
-        handleCollision(posX, posY);
-
-        velocityX = velocityX * 0.8;
-        velocityY = velocityY * 0.8;
-
-        input.dragDX = 0;
-        input.dragDY = 0;
-
-    }
-
-
-    /*
-     * Events
-     */
-
-    function onPlateMouseDown(event) {
-        event.preventDefault();
-        document.addEventListener('mouseup', onDocumentMouseUp);
-        document.addEventListener('mousemove', onDocumentMouseMove);
-        handleDragStart(event.clientX, event.clientY);
-    }
-
-    function onDocumentMouseMove(event) {
-        if (input.dragging) handleDragging(event.clientX, event.clientY);
-    }
-
-    function onDocumentMouseUp(event) {
-        document.removeEventListener('mouseup', onDocumentMouseUp);
-        document.removeEventListener('mousemove', onDocumentMouseMove);
-        event.preventDefault();
-        handleDragStop();
-    }
-
-    function onTouchStart(event) {
-        plate.textContent += " start";
-        event.preventDefault();
-        if (event.touches.length === 1) {
-            handleDragStart(event.touches[0].clientX, event.touches[0].clientY);
-            document.addEventListener('touchmove', onTouchMove);
-            document.addEventListener('touchend', onTouchEnd);
-            document.addEventListener('touchcancel', onTouchEnd);
-        }
-    }
-
-    function onTouchMove(event) {
-        plate.textContent += " move";
-        event.preventDefault();
-        if (event.touches.length === 1) {
-            handleDragging(event.touches[0].clientX, event.touches[0].clientY);
-        }
-    }
-
-    function onTouchEnd(event) {
-        plate.textContent += " end";
-        event.preventDefault();
-        if (event.touches.length === 0) {
-            handleDragStop(input.dragX, input.dragY);
-            document.removeEventListener('touchmove', onTouchMove);
-            document.removeEventListener('touchend', onTouchEnd);
-            document.removeEventListener('touchcancel', onTouchEnd);
-        }
-    }
-
-    function handleDragStart(x, y) {
-        input.dragging = true;
-        input.dragStartX = input.dragX = x;
-        input.dragStartY = input.dragY = y;
-    }
-
-    function handleDragging(x, y) {
-        if (dragging) {
-            input.dragDX = x - input.dragX;
-            input.dragDY = y - input.dragY;
-            input.dragX = x;
-            input.dragY = y;
-        }
-    }
-
-    function handleDragStop() {
-        if (dragging) {
-            dragging = false;
-            input.dragDX = 0;
-            input.dragDY = 0;
-        }
-    }
-
-    function handleCollision(x, y) {
-
-        targets.forEach(target => {
-            if (x > target.offsetLeft && x < target.offsetLeft + target.clientWidth && y > target.offsetTop && y < target.offsetTop + target.clientHeight) {
-                target.style.borderStyle = "dotted";
-                if (target == targets[0]) {
-                    plate.style.transform = 'translate(' + snapX + 'px,' + snapY + 'px) translateZ(0) scale(1)';
-                    plate.style.transition = "background 1s";
-                    plate.style.background = "tomato";
-                    handleDragStop();
-                    plate.removeEventListener('touchstart', onTouchStart);
-                    plate.removeEventListener('mousedown', onPlateMouseDown);
-
-                }
-            } else {
-                target.style.borderStyle = "solid";
-            }
-        });
-    }
-
-</script>
