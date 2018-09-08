@@ -77,7 +77,7 @@
 
             // listeners
             plate.addEventListener('touchstart', onTouchStart);
-            plate.addEventListener('mousedown', onPlateMouseDown);
+            plate.addEventListener('mousedown', onMouseDown);
         }
 
         function onAnimationFrame() {
@@ -135,7 +135,7 @@
          ******************************** Events
          */
 
-        function onPlateMouseDown(event) {
+        function onMouseDown(event) {
             event.preventDefault();
             document.addEventListener('mouseup', onDocumentMouseUp);
             document.addEventListener('mousemove', onDocumentMouseMove);
