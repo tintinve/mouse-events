@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+    <style type="text/css">
+        body {
+            overflow: hidden;
+            background: papayawhip;
+        }
+
+        #rod {
+            width: calc(120vw*2);
+            height: calc(86vw*2);
+            position: absolute;
+            background-image: url(12.jpg);
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="rod"></div>
+
+    <script>
+        window.addEventListener("load", init);
+
+        let rod = document.querySelector("#rod");
+        let centerX = window.innerWidth / 2; //
+        let centerY = window.innerHeight / 2; //
+        let mouseX = 0,
+            mouseY = 0;
+        let xp = centerX,
+            yp = centerY; //
+        let steps = 30; //hvor hurtig bevægelse - less = more //
+        let RAF;
+        let moving = false;
+
+
+        function init() {
+            document.addEventListener("mousemove", mouseMove);
+            rod.style.left = centerX - (rod.clientWidth / 2) + "px"; //center
+            rod.style.top = centerY - (rod.clientHeight / 2) + "px"; //middle
+            rod.addEventListener("click", toggle);
+        }
+
+        function toggle() {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+            } else {
+                RAF = requestAnimationFrame(moveRAF);
+            }
+            moving = !moving;
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+
+        function moveRAF() {
+            xp = rod.offsetLeft;
+            yp = rod.offsetTop;
+
+            xp += ((centerX - mouseX) / steps);
+            yp += ((centerY - mouseY) / steps);
+
+            //rod is bigger than stage
+            if (xp > 0) {
+                xp = 0;
+            }
+            if (yp > 0) {
+                yp = 0;
+            }
+            if (xp < window.innerWidth - rod.offsetWidth) {
+                xp = window.innerWidth - rod.offsetWidth;
+            }
+            if (yp < window.innerHeight - rod.offsetHeight) {
+                yp = window.innerHeight - rod.offsetHeight;
+            }
+            /*
+            //rod is smaller than stage
+            if (xp < 0) {
+                xp = 0;
+            }
+            if (yp < 0) {
+                yp = 0;
+            }
+            if (xp > window.innerWidth - rod.offsetWidth) {
+                xp = window.innerWidth - rod.offsetWidth;
+            }
+            if (yp > window.innerHeight - rod.offsetHeight) {
+                yp = window.innerHeight - rod.offsetHeight;
+            }*/
+
+            rod.style.left = xp + "px";
+            rod.style.top = yp + "px";
+            RAF = requestAnimationFrame(moveRAF);
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        #bg1 {
+            width: calc(120vw*1.8);
+            height: calc(86vw*1.8);
+            position: absolute;
+            background-image: url(12.jpg);
+            background-size: cover;
+            z-index: 0;
+        }
+
+        #bg2 {
+            width: calc(102.4vw*2.8);
+            height: calc(76.8vw*2.8);
+            position: absolute;
+            background-image: url(fractals1.gif);
+            background-size: 100% 100%;
+            z-index: 1;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bg1"> </div>
+    <div id="bg2"> </div>
+
+    <script>
+        //different sizes
+        window.addEventListener("load", init);
+
+        let bg1 = document.querySelector("#bg1");
+        let bg2 = document.querySelector("#bg2");
+        let centerX = window.innerWidth / 2; //
+        let centerY = window.innerHeight / 2; //
+        let mouseX = 0,
+            mouseY = 0;
+        let RAF;
+        let moving = false;
+
+        function init() {
+            bg1.style.left = centerX - (bg1.clientWidth / 2) + "px"; //center
+            bg1.style.top = centerY - (bg1.clientHeight / 2) + "px"; //middle
+            bg2.style.left = centerX - (bg2.clientWidth / 2) + "px"; //center
+            bg2.style.top = centerY - (bg2.clientHeight / 2) + "px"; //middle
+            document.addEventListener("mousemove", mouseMove);
+            bg1.addEventListener("click", toggle);
+            bg2.addEventListener("click", toggle);
+        }
+
+        function mouseMove(e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+
+        function toggle(e) {
+            if (moving) {
+                cancelAnimationFrame(RAF);
+            } else {
+                RAF = requestAnimationFrame(raf);
+            }
+            moving = !moving;
+        }
+
+        function raf() {
+            move(bg1, 80);
+            move(bg2, 40);
+            RAF = requestAnimationFrame(raf);
+        }
+
+        function move(elm, steps) {
+            //console.log(elm.style);
+            xp = elm.offsetLeft;
+            yp = elm.offsetTop;
+
+            xp += ((centerX - mouseX) / steps);
+            yp += ((centerY - mouseY) / steps);
+            /*
+            //elm is smaller than stage
+            if (xp < 0) {
+                xp = 0;
+            }
+            if (yp < 0) {
+                yp = 0;
+            }
+            if (xp > window.innerWidth - elm.offsetWidth) {
+                xp = window.innerWidth - elm.offsetWidth;
+            }
+            if (yp > window.innerHeight - elm.offsetHeight) {
+                yp = window.innerHeight - elm.offsetHeight;
+            }
+            */
+
+            //elm is bigger than stage
+            if (xp > 0) {
+                xp = 0;
+            }
+            if (yp > 0) {
+                yp = 0;
+            }
+            if (xp < window.innerWidth - elm.offsetWidth) {
+                xp = window.innerWidth - elm.offsetWidth;
+            }
+            if (yp < window.innerHeight - elm.offsetHeight) {
+                yp = window.innerHeight - elm.offsetHeight;
+            }
+
+            elm.style.left = xp + "px";
+            elm.style.top = yp + "px";
+        }
+
+        /*        
+                $(document).ready(function() {
+
+                    var centerX = $(window).width() / 2; //
+                    var centerY = $(window).height() / 2; //
+
+                    var mouseX = 0,
+                        mouseY = 0;
+                    $(window).mousemove(function(e) {
+                        mouseX = e.pageX;
+                        mouseY = e.pageY;
+                    });
+
+                    function move(elm, step) {
+                        // Hver elm sin egen xp, yp 
+                        var xp = parseInt(elm.css("left"));
+                        var yp = parseInt(elm.css("top"));
+                        /////
+                        xp += (centerX - mouseX) / step;
+                        yp += (centerY - mouseY) / step;
+                        /////
+                        if (xp > 0) {
+                            xp = 0;
+                        }
+                        if (yp > 0) {
+                            yp = 0;
+                        }
+                        if (xp < $(window).width() - elm.width()) {
+                            xp = $(window).width() - elm.width();
+                        }
+                        if (yp < $(window).height() - elm.height()) {
+                            yp = $(window).height() - elm.height();
+                        }
+                        /////
+                        elm.css({
+                            left: xp + "px",
+                            top: yp + "px"
+                        });
+                    }
+
+                    $("#bg1").css({
+                        left: centerX - ($("#bg1").width() / 2) + "px",
+                        top: centerY - ($("#bg1").height() / 2) + "px"
+                    });
+                    $("#bg2").css({
+                        left: centerX - ($("#bg2").width() / 2) + "px",
+                        top: centerY - ($("#bg2").height() / 2) + "px"
+                    });
+                    $("#bg2").css({
+                        opacity: 0.3
+                    });
+
+                    var bg1loop, bg2loop;
+
+                    $(window).toggle(function() {
+                        bg1loop = setInterval(move, 30, $("#bg1"), 45);
+                        bg2loop = setInterval(move, 30, $("#bg2"), 35);
+                    }, function() {
+                        clearInterval(bg1loop);
+                        clearInterval(bg2loop);
+                    });
+
+                });*/
+
+    </script>
+</body>
+
+</html>

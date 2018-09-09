@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>pixelart</title>
+    <style>
+        html,
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            background: cornflowerblue;
+        }
+
+        #container {
+            /*turns into grid in script*/
+            /*fullscreen like contain*/
+            margin: auto;
+        }
+
+        [data-pixel] {
+            border: 1px solid silver;
+        }
+
+        #content {
+            margin: auto;
+            padding: 5vw;
+            width: 50vw;
+            background: rgba(220, 220, 220, .6);
+        }
+
+        /*****************/
+
+        .magenta {
+            background: magenta;
+        }
+
+        .yellow {
+            background: yellow;
+        }
+
+        .aqua {
+            background: aqua;
+        }
+
+        .green {
+            background: #73d889;
+        }
+
+        .blue {
+            background: cornflowerblue;
+        }
+
+        .red {
+            background: tomato;
+        }
+
+        .k {
+            background: black;
+        }
+
+        ._ {
+            background: papayawhip;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="container">
+    </section>
+    <template>
+        <div data-pixel class=""></div>
+    </template>
+
+    <script>
+        window.addEventListener("load", init);
+        let pixels = [];
+        let colored = [];
+        let bodyPixels = [];
+        let hovered = false;
+
+        let art1 = {
+            classes: [
+                'blue', "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue",
+                "blue", "blue", "_", "_", "blue", "blue", "_", "_", "blue", "blue",
+                "blue", "blue", "_", "k", "blue", "blue", "_", "k", "blue", "blue",
+                "blue", "blue", "green", "green", "green", "green", "green", "green", "blue", "blue",
+                "blue", "green", "green", "green", "green", "green", "green", "green", "green", "blue",
+                "blue", "blue", "green", "green", "green", "green", "green", "green", "blue", "blue",
+                "green", "green", "green", "green", "green", "green", "green", "green", "green", "green",
+                "green", "green", "green", "green", "green", "green", "green", "green", "green", "green",
+                "blue", "green", "green", "green", "green", "green", "green", "green", "green", "blue",
+                "blue", "blue", "green", "green", "blue", "blue", "green", "green", "blue", "blue"
+            ],
+            rows: 10,
+            columns: 10
+        };
+        let art2 = {
+            classes: [
+                'red', 'blue', 'red', 'blue', 'blue', 'blue', 'blue', 'red', 'blue', 'red',
+                "red", "red", "blue", "blue", "blue", "blue", "blue", "blue", "red", "red",
+                "red", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "red",
+                "red", "blue", "_", "_", "blue", "blue", "_", "_", "blue", "red",
+                "red", "blue", "_", "k", "blue", "blue", "_", "k", "blue", "red",
+                "red", "red", "red", "red", "red", "red", "red", "red", "red", "red",
+                "blue", "blue", "red", "red", "red", "red", "red", "red", "blue", "blue",
+                "blue", "blue", "red", "red", "red", "red", "red", "red", "blue", "blue",
+                "blue", "blue", "red", "red", "red", "red", "red", "red", "blue", "blue",
+                "blue", "red", "blue", "red", "blue", "blue", "red", "blue", "red", "blue"
+            ],
+            rows: 10,
+            columns: 10
+        };
+
+        let art = art1; /////////////////////
+
+        function init() {
+            let temp = document.querySelector("template");
+            let container = document.querySelector("#container");
+            let unit = (window.innerWidth / art.columns > window.innerHeight / art.rows) ? "vh" : "vw";
+            container.style.width = container.style.height = "100" + unit;
+            // få containers w i vw
+            let pixelW = container.getBoundingClientRect().width / document.documentElement.clientWidth * 100 / art.columns;
+            let pixelH = container.getBoundingClientRect().height / document.documentElement.clientHeight * 100 / art.rows;
+            container.style.display = "grid";
+            container.style.gridTemplateColumns = "repeat(" + art.columns + ", 1fr)";
+            art.classes.forEach(artClass => {
+                let clone = temp.content.cloneNode(true);
+                //clone.querySelector("[data-pixel]").style.width = pixelW + "vw";
+                //clone.querySelector("[data-pixel]").style.height = pixelH + "vh";
+                clone.querySelector("[data-pixel]").addEventListener("mouseover", function _func(e) {
+                    if (e.target.classList.length < 1) {
+                        e.target.classList.add(artClass);
+                        colored.push(artClass);
+                    }
+                    if (colored.length == art.classes.length) {
+                        hovered = true;
+                        console.log("hovered", hovered);
+                    }
+                    e.target.removeEventListener("mouseover", _func); // ellers blir den ved
+                });
+                container.appendChild(clone);
+            });
+        }
+
+        function color(elm, artClass) {
+            elm.classList = "";
+            elm.classList.add(artClass);
+        }
+
+    </script>
+</body>
+
+</html>

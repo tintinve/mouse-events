@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>pixelart</title>
+    <style>
+        html,
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #container {
+            /*turns into grid in script*/
+            width: 50vw;
+            margin: auto;
+        }
+
+        [data-pixel] {}
+
+        #content {
+            margin: auto;
+            padding: 5vw;
+            width: 70vw;
+            background: rgba(220, 220, 220, .6);
+        }
+
+        /*****************/
+
+        .bg,
+        .ll,
+        .rl {}
+
+        .darkbg {
+            background: #5f000d;
+        }
+
+        .lightbg {
+            background: #c7b0ac;
+        }
+
+        .fi {
+            background: tomato;
+        }
+
+        ._ {
+            background: papayawhip;
+        }
+
+        .k {
+            background: #440044;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="container">
+    </section>
+    <section id="content">
+        <p>Where do we stand on the latest client ask powerpoint Bunny, or closer to the metal or we need to start advertising
+            on social media, gain traction touch base. Optimize for search touch base high performance keywords. This is
+            not the hill i want to die on let's unpack that later and first-order optimal strategies. Even dead cats bounce
+            golden goose, but golden goose, and cloud strategy for loop back. Parallel path. New economy level the playing
+            field, level the playing field. Churning anomalies. </p>
+
+        <p>That ipo will be a game-changer usabiltiy, yet low-hanging fruit and come up with something buzzworthy, and this
+            is not the hill i want to die on, yet action item goalposts. Mobile friendly at the end of the day, or we need
+            to have a Come to Jesus meeting with Phil about his attitude value-added, nor digital literacy so closing these
+            latest prospects is like putting socks on an octopus curate. Optimize for search. Upsell forcing function but
+            digital literacy, today shall be a cloudy day, thanks to blue sky thinking, we can now deploy our new ui to the
+            cloud overcome key issues to meet key milestones, and customer centric window-licker. </p>
+    </section>
+    <template>
+        <div data-pixel class=""></div>
+    </template>
+
+    <script>
+        let art1 = {
+            classes: [
+                'bg', "bg", "bg", "bg", "bg", "bg", "bg", "bg", "bg", "bg",
+                "bg", "bg", "ll", "ll", "bg", "bg", "rl", "rl", "bg", "bg",
+                "bg", "bg", "ll", "ll", "bg", "bg", "rl", "rl", "bg", "bg",
+                "bg", "bg", "fi", "fi", "fi", "fi", "fi", "fi", "bg", "bg",
+                "bg", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "bg",
+                "bg", "bg", "fi", "fi", "fi", "fi", "fi", "fi", "bg", "bg",
+                "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi",
+                "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi",
+                "bg", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "bg",
+                "bg", "bg", "fi", "fi", "bg", "bg", "fi", "fi", "bg", "bg"
+            ],
+            classes1: [
+                "b b b b b b b b b b",
+                "b b l l b b r r b b",
+                "b b l l b b r r b b",
+                "b b f f f f f f b b",
+                "b f f f f f f f f b",
+                "b b f f f f f f b b",
+                "f f f f f f f f f f",
+                "f f f f f f f f f f",
+                "b f f f f f f f f b",
+                "b b f f b b f f b b",
+            ],
+
+            rows: 10,
+            columns: 10,
+            leftLid: [
+                12, 13,
+                22, 23
+            ],
+            rightLid: [
+                16, 17,
+                26, 27
+            ],
+            lidOpenClasses: [
+                "_", "_",
+                "_", "_"
+            ],
+            lidClosedClasses: [
+                "f", "f",
+                "f", "f"
+            ]
+        };
+
+
+        let art3 = {
+            classes: [
+                'fi', 'bg', "fi", 'bg', 'bg', 'bg', 'bg', "fi", 'bg', "fi",
+                "fi", "fi", "bg", "bg", "bg", "bg", "bg", "bg", "fi", "fi",
+                "fi", 'bg', "bg", "bg", "bg", "bg", "bg", "bg", "bg", "fi",
+                "fi", 'bg', "ll", "ll", "bg", "bg", "rl", "rl", "bg", "fi",
+                "fi", 'bg', "ll", "ll", "bg", "bg", "rl", "rl", "bg", "fi",
+                "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi", "fi",
+                "bg", "bg", "fi", "fi", "fi", "fi", "fi", "fi", "bg", "bg",
+                "bg", "bg", "fi", "fi", "fi", "fi", "fi", "fi", "bg", "bg",
+                "bg", "bg", "fi", "fi", "fi", "fi", "fi", "fi", "bg", "bg",
+                "bg", "fi", "bg", "fi", "bg", "bg", "fi", "bg", "fi", "bg"
+            ],
+            rows: 10,
+            columns: 10,
+            leftLid: [
+                32, 33,
+                42, 43
+            ],
+            rightLid: [
+                36, 37,
+                46, 47
+            ],
+            lidOpenClasses: [
+                "_", "_",
+                "_", "_"
+            ],
+            lidClosedClasses: [
+                "bg", "bg",
+                "bg", "bg"
+            ]
+        };
+        let art = art3; // Vi vælger en pixelart
+        let pixels = []; // alle pixels
+        let fiPixels = []; // figur pixels
+        let colored = []; // de skrabede pixler
+        // let hovered = true;
+        let blackEyeLeft = art.leftLid[3];
+        let blackEyeRight = art.rightLid[3];
+
+        window.addEventListener("load", init);
+
+        function init() {
+            let temp = document.querySelector("template");
+            let container = document.querySelector("#container");
+
+            fiPixels = art.classes.filter(fi => fi == "fi");
+            document.querySelector("body").style.transition = "0.3s";
+            document.querySelector("body").classList.add("darkbg");
+
+            // få firkantens w i vw
+            let pixelW = container.getBoundingClientRect().width / document.documentElement.clientWidth * 100 / art.columns;
+
+            container.style.display = "grid";
+            container.style.gridTemplateColumns = "repeat(" + art.columns + ", 1fr)";
+
+            art.classes.forEach(artClass => {
+                let clone = temp.content.cloneNode(true);
+                clone.querySelector("[data-pixel]").style.height = pixelW + "vw";
+                clone.querySelector("[data-pixel]").addEventListener("mouseover", function _func(e) {
+                    over(e, artClass);
+                    e.target.removeEventListener("mouseover", _func);
+                });
+                container.appendChild(clone);
+            });
+            pixels = document.querySelectorAll("[data-pixel]");
+            blinkClose();
+            blinkInterval = setInterval(blinkClose, 7000);
+            container.addEventListener("mousemove", eyes);
+        }
+
+        function over(e, artClass) {
+            if (artClass == "fi") {
+                e.target.classList.add(artClass);
+                colored.push(artClass);
+            }
+            if (colored.length == fiPixels.length) {
+                //hovered = true;
+                //console.log("hovered", hovered);
+                document.querySelector("body").classList.add("lightbg");
+            }
+        }
+
+        function eyes(e) {
+            let leftEyeCenter = pixels[art.leftLid[3]].offsetLeft;
+            let rightEyeCenter = pixels[art.rightLid[3]].offsetLeft;
+            let bothEyemiddle = pixels[art.leftLid[3]].offsetTop;
+
+            if (e.clientX < leftEyeCenter && e.clientY < bothEyemiddle) {
+                blackEyeLeft = art.leftLid[0];
+                blackEyeRight = art.rightLid[0];
+            }
+            if (e.clientX > rightEyeCenter && e.clientY < bothEyemiddle) {
+                blackEyeLeft = art.leftLid[1];
+                blackEyeRight = art.rightLid[1];
+            }
+            if (e.clientX > rightEyeCenter && e.clientY > bothEyemiddle) {
+                blackEyeLeft = art.leftLid[3];
+                blackEyeRight = art.rightLid[3];
+            }
+            if (e.clientX < leftEyeCenter && e.clientY > bothEyemiddle) {
+                blackEyeLeft = art.leftLid[2];
+                blackEyeRight = art.rightLid[2];
+            }
+            if (e.clientX > leftEyeCenter && e.clientX < rightEyeCenter && e.clientY < bothEyemiddle) {
+                blackEyeLeft = art.leftLid[1];
+                blackEyeRight = art.rightLid[0];
+            }
+            if (e.clientX > leftEyeCenter && e.clientX < rightEyeCenter && e.clientY > bothEyemiddle) {
+                blackEyeLeft = art.leftLid[3];
+                blackEyeRight = art.rightLid[2];
+            }
+            colorEyes();
+        }
+
+        function color(elm, artClass) {
+            elm.classList = "";
+            elm.classList.add(artClass);
+        }
+
+        function colorEyes() {
+            for (let i = 0; i < art.lidOpenClasses.length; i++) {
+                //console.log(pixels[art.leftLid[i]], art.lidOpenClasses[i]);
+                color(pixels[art.leftLid[i]], art.lidOpenClasses[i]);
+                color(pixels[art.rightLid[i]], art.lidOpenClasses[i]);
+            }
+            color(pixels[blackEyeLeft], "k");
+            color(pixels[blackEyeRight], "k");
+        }
+
+
+
+        function blinkClose() {
+            for (let i = 0; i < art.lidClosedClasses.length; i++) {
+                let stagger = i * 0.09;
+                pixels[art.leftLid[i]].style.transition = "0s " + stagger + "s";
+                pixels[art.rightLid[i]].style.transition = "0s " + stagger + "s";
+                color(pixels[art.leftLid[i]], art.lidClosedClasses[i]);
+                color(pixels[art.rightLid[i]], art.lidClosedClasses[i]);
+            }
+            //clearInterval(blinkInterval);
+            blinkTimeout = setTimeout(blinkOpen, 400);
+        }
+
+        function blinkOpen() {
+            for (let i = 0; i < art.lidOpenClasses.length; i++) {
+                //console.log(pixels[art.leftLid[i]], art.lidOpenClasses[i]);
+                color(pixels[art.leftLid[i]], art.lidOpenClasses[i]);
+                color(pixels[art.rightLid[i]], art.lidOpenClasses[i]);
+                pixels[art.leftLid[i]].style.transition = "none";
+                pixels[art.rightLid[i]].style.transition = "none";
+                color(pixels[blackEyeLeft], "k");
+                color(pixels[blackEyeRight], "k");
+            }
+            //clearTimeout(blinkTimeout);
+        }
+
+    </script>
+</body>
+
+</html>

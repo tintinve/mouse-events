@@ -1,68 +1,78 @@
-<!DOCTYPE html>
-<html lang="">
+<!DOCTYPE HTML>
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <meta charset="UTF-8">
+    <title>mouse move</title>
     <style>
         body {
-            background-color: papayawhip;
             overflow: hidden;
+            background: papayawhip;
         }
 
-        #red {
+        #rod {
             width: 20vw;
             height: 20vw;
+            background: red;
             position: absolute;
-            background-color: coral;
             color: white;
         }
-
     </style>
 </head>
 
 <body>
-    <div id="red"></div>
-    <script>
-        const red = document.querySelector("#red");
-        let redCX = red.clientWidth / 2;
-        let redCY = red.clientHeight / 2;
+    <div id="rod"> </div>
 
-        document.addEventListener("DOMContentLoaded", init);
+    <script>
+        window.addEventListener("load", init);
+
+        let rod = document.querySelector("#rod");
 
         function init() {
-            document.addEventListener("mousemove", mouseMove);
+            rod.style.visibility = "hidden";
+            document.addEventListener("mousemove", mouseMove)
         }
 
         function mouseMove(e) {
-            console.log(e);
-            red.textContent = "X : " + e.pageX +
-                "\n Y : " + e.pageY;
-            red.style.whiteSpace = "pre";
+            var elmCX = rod.clientWidth / 2;
+            var elmCY = rod.clientHeight / 2;
 
+            rod.style.visibility = "visible";
+            //console.log(e);
 
-            function mouseMove(e) {
-                let redCX = red.clientWidth / 2;
-                let redCY = red.clientHeight / 2;
+            rod.style.top = e.pageY - elmCY + "px";
+            rod.style.left = e.pageX - elmCX + "px";
 
-                red.style.top = e.pageY - redCY + "px";
-                red.style.left = e.pageX - redCX + "px";
-
-                if (e.pageY >= window.innerHeight - redCY) {
-                    red.style.top = window.innerHeight - red.clientHeight + "px";
-                }
-                if (e.pageX >= window.innerWidth - redCX) {
-                    red.style.left = window.innerWidth - red.clientWidth + "px";
-                }
-                if (e.pageY <= 0 + redCY) {
-                    red.style.top = 0 + "px";
-                }
-                if (e.pageX <= 0 + redCX) {
-                    red.style.left = 0 + "px";
-                }
-
+            if (e.pageY >= window.innerHeight - elmCY) {
+                rod.style.top = window.innerHeight - rod.clientHeight + "px";
             }
+            if (e.pageX >= window.innerWidth - elmCX) {
+                rod.style.left = window.innerWidth - rod.clientWidth + "px";
+            }
+            if (e.pageY <= 0 + elmCY) {
+                rod.style.top = 0 + "px";
+            }
+            if (e.pageX <= 0 + elmCX) {
+                rod.style.left = 0 + "px";
+            }
+
+            /*
+                                    rod.style.transform = "translate(" + (e.pageX - elmCX) + "px ," + (e.pageY - elmCY) + "px)";
+
+                                    if (e.pageY >= window.innerHeight - elmCY) {
+                                        rod.style.transform = "translateY(" + (window.innerHeight - rod.clientHeight) + "px)";
+                                    }
+                                    if (e.pageX >= window.innerWidth - elmCX) {
+                                        rod.style.transform = "translateX(" + (window.innerWidth - rod.clientWidth) + "px)";
+                                    }
+                                    if (e.pageY <= 0 + elmCY) {
+                                        rod.style.transform = "translateY(" + 0 + "px)";
+                                    }
+                                    if (e.pageX <= 0 + elmCX) {
+                                        rod.style.transform = "translateX(" + 0 + "px)";
+
+                                    }*/
+        }
 
     </script>
 </body>

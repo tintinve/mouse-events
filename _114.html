@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>pixelart</title>
+    <style>
+        html,
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            background: papayawhip;
+        }
+
+        #container {
+            /*turns into grid in script*/
+            width: 50vw;
+            margin: 2vw auto;
+        }
+
+        [data-pixel] {
+            border: 1px solid silver;
+        }
+
+        #content {
+            margin: auto;
+            padding: 5vw;
+            width: 50vw;
+            background: rgba(220, 220, 220, .6);
+        }
+
+        /*****************/
+
+        .magenta {
+            background: magenta;
+        }
+
+        .yellow {
+            background: yellow;
+        }
+
+        .aqua {
+            background: aqua;
+        }
+
+        .green {
+            background: #73d889;
+        }
+
+        .blue {
+            background: cornflowerblue;
+        }
+
+        .red {
+            background: tomato;
+        }
+
+        .k {
+            background: black;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="container">
+    </section>
+    <section id="content">
+        <p>Where do we stand on the latest client ask powerpoint Bunny, or closer to the metal or we need to start advertising
+            on social media, gain traction touch base. Optimize for search touch base high performance keywords. This is
+            not the hill i want to die on let's unpack that later and first-order optimal strategies. Even dead cats bounce
+            golden goose, but golden goose, and cloud strategy for loop back. Parallel path. New economy level the playing
+            field, level the playing field. Churning anomalies. </p>
+
+        <p>That ipo will be a game-changer usabiltiy, yet low-hanging fruit and come up with something buzzworthy, and this
+            is not the hill i want to die on, yet action item goalposts. Mobile friendly at the end of the day, or we need
+            to have a Come to Jesus meeting with Phil about his attitude value-added, nor digital literacy so closing these
+            latest prospects is like putting socks on an octopus curate. Optimize for search. Upsell forcing function but
+            digital literacy, today shall be a cloudy day, thanks to blue sky thinking, we can now deploy our new ui to the
+            cloud overcome key issues to meet key milestones, and customer centric window-licker. </p>
+    </section>
+    <template>
+        <div data-pixel class=""></div>
+    </template>
+
+    <script>
+        window.addEventListener("load", init);
+        let pixels = [];
+        let colored = [];
+        let hovered = true;
+        let blackEyeLeft;
+        let blackEyeRight;
+
+        let art1 = {
+            classes: [
+                'blue', "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue",
+                "blue", "blue", "green", "green", "blue", "blue", "green", "green", "blue", "blue",
+                "blue", "blue", "green", "green", "blue", "blue", "green", "green", "blue", "blue",
+                "blue", "blue", "green", "green", "green", "green", "green", "green", "blue", "blue",
+                "blue", "green", "green", "green", "green", "green", "green", "green", "green", "blue",
+                "blue", "blue", "green", "green", "green", "green", "green", "green", "blue", "blue",
+                "green", "green", "green", "green", "green", "green", "green", "green", "green", "green",
+                "green", "green", "green", "green", "green", "green", "green", "green", "green", "green",
+                "blue", "green", "green", "green", "green", "green", "green", "green", "green", "blue",
+                "blue", "blue", "green", "green", "blue", "blue", "green", "green", "blue", "blue"
+            ],
+            rows: 10,
+            columns: 10,
+            leftLid: [
+                12, 13,
+                22, 23
+            ],
+            rightLid: [
+                16, 17,
+                26, 27
+            ],
+            lidOpenClasses: [
+                "_", "_",
+                "_", "_"
+            ],
+            lidClosedClasses: [
+                "green", "green",
+                "green", "green"
+            ]
+        };
+        let art2 = {
+            classes: [
+                'red', 'blue', 'red', 'blue', 'blue', 'blue', 'blue', 'red', 'blue', 'red',
+                "red", "red", "blue", "blue", "blue", "blue", "blue", "blue", "red", "red",
+                "red", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "red",
+                "red", "blue", "red", "red", "blue", "blue", "red", "red", "blue", "red",
+                "red", "blue", "red", "red", "blue", "blue", "red", "red", "blue", "red",
+                "red", "red", "red", "red", "red", "red", "red", "red", "red", "red",
+                "blue", "blue", "red", "red", "red", "red", "red", "red", "blue", "blue",
+                "blue", "blue", "red", "red", "red", "red", "red", "red", "blue", "blue",
+                "blue", "blue", "red", "red", "red", "red", "red", "red", "blue", "blue",
+                "blue", "red", "blue", "red", "blue", "blue", "red", "blue", "red", "blue"
+            ],
+            rows: 10,
+            columns: 10,
+            leftLid: [
+                32, 33,
+                42, 43
+            ],
+            rightLid: [
+                36, 37,
+                46, 47
+            ],
+            lidOpenClasses: [
+                "_", "_",
+                "_", "_"
+            ],
+            lidClosedClasses: [
+                "red", "red",
+                "red", "red"
+            ]
+        };
+
+        let art = art2; /////////////////////
+
+        function init() {
+            let temp = document.querySelector("template");
+            let container = document.querySelector("#container");
+
+            // få firkantens w i vw
+            let pixelW = container.getBoundingClientRect().width / document.documentElement.clientWidth * 100 / art.columns;
+            container.style.display = "grid";
+            container.style.gridTemplateColumns = "repeat(" + art.columns + ", 1fr)";
+            art.classes.forEach(artClass => {
+                let clone = temp.content.cloneNode(true);
+                clone.querySelector("[data-pixel]").style.height = pixelW + "vw";
+                clone.querySelector("[data-pixel]").addEventListener("mouseover", function _func(e) {
+                    if (e.target.classList.length < 1) {
+                        e.target.classList.add(artClass);
+                        colored.push(artClass);
+                    }
+                    if (colored.length == art.classes.length) {
+                        hovered = true;
+                        console.log("hovered", hovered);
+                        container.addEventListener("mousemove", eyes);
+                    }
+                    e.target.removeEventListener("mouseover", _func);
+                });
+                container.appendChild(clone);
+            });
+            pixels = document.querySelectorAll("[data-pixel]");
+        }
+
+
+        function color(elm, artClass) {
+            elm.classList = "";
+            elm.classList.add(artClass);
+        }
+
+        function colorEyes() {
+            for (let i = 0; i < art.lidOpenClasses.length; i++) {
+                //console.log(pixels[art.leftLid[i]], art.lidOpenClasses[i]);
+                color(pixels[art.leftLid[i]], art.lidOpenClasses[i]);
+                color(pixels[art.rightLid[i]], art.lidOpenClasses[i]);
+            }
+            color(pixels[blackEyeLeft], "k");
+            color(pixels[blackEyeRight], "k");
+        }
+
+        function eyes(e) {
+            let leftEyeCenter = pixels[art.leftLid[3]].offsetLeft;
+            let rightEyeCenter = pixels[art.rightLid[3]].offsetLeft;
+            let bothEyemiddle = pixels[art.leftLid[3]].offsetTop;
+
+            if (e.clientX < leftEyeCenter && e.clientY < bothEyemiddle) {
+                blackEyeLeft = art.leftLid[0];
+                blackEyeRight = art.rightLid[0];
+            }
+            if (e.clientX > rightEyeCenter && e.clientY < bothEyemiddle) {
+                blackEyeLeft = art.leftLid[1];
+                blackEyeRight = art.rightLid[1];
+            }
+            if (e.clientX > rightEyeCenter && e.clientY > bothEyemiddle) {
+                blackEyeLeft = art.leftLid[3];
+                blackEyeRight = art.rightLid[3];
+            }
+            if (e.clientX < leftEyeCenter && e.clientY > bothEyemiddle) {
+                blackEyeLeft = art.leftLid[2];
+                blackEyeRight = art.rightLid[2];
+            }
+            if (e.clientX > leftEyeCenter && e.clientX < rightEyeCenter && e.clientY < bothEyemiddle) {
+                blackEyeLeft = art.leftLid[1];
+                blackEyeRight = art.rightLid[0];
+            }
+            if (e.clientX > leftEyeCenter && e.clientX < rightEyeCenter && e.clientY > bothEyemiddle) {
+                blackEyeLeft = art.leftLid[3];
+                blackEyeRight = art.rightLid[2];
+            }
+            colorEyes();
+
+        }
+
+    </script>
+</body>
+
+</html>

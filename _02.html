@@ -1,53 +1,79 @@
-<!DOCTYPE html>
-<html lang="">
+<!DOCTYPE HTML>
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <meta charset="UTF-8">
+    <title>mouse move</title>
     <style>
         body {
-            background-color: papayawhip;
             overflow: hidden;
+            background: papayawhip;
         }
 
-        #red {
+        #rod {
             width: 20vw;
             height: 20vw;
+            background: red;
             position: absolute;
-            background-color: coral;
             color: white;
         }
-
     </style>
 </head>
 
 <body>
-    <div id="red"></div>
-    <script>
-        const red = document.querySelector("#red");
+    <div id="rod"> </div>
 
-        document.addEventListener("DOMContentLoaded", init);
+    <script>
+        window.addEventListener("load", init);
+
+        let rod = document.querySelector("#rod");
 
         function init() {
-            document.addEventListener("mousemove", mouseMove);
+            rod.style.visibility = "hidden";
+            document.addEventListener("mousemove", mouseMove)
         }
 
         function mouseMove(e) {
+            rod.style.visibility = "visible";
             console.log(e);
-            red.textContent = "X : " + e.pageX +
-                "\n Y : " + e.pageY;
-            red.style.whiteSpace = "pre";
+            rod.textContent = "Xaxis : " + e.pageX + " Yaxis : " + e.pageY + " winH: " + window.innerHeight + " winW " + window.innerWidth + " clientH " + rod.clientHeight + " clientW " + rod.clientWidth;
 
-            red.style.left = e.pageX + "px";
-            red.style.top = e.pageY + "px";
+            rod.style.top = e.pageY + "px";
+            rod.style.left = e.pageX + "px";
 
-            if (e.pageX >= window.innerWidth - red.clientWidth) {
-                red.style.left = window.innerWidth - red.clientWidth + "px";
+            if (e.pageY >= window.innerHeight - rod.clientHeight) {
+                rod.style.top = window.innerHeight - rod.clientHeight + "px";
             }
-            if (e.pageY >= window.innerHeight - red.clientHeight) {
-                red.style.top = window.innerHeight - red.clientHeight + "px";
+            if (e.pageX >= window.innerWidth - rod.clientWidth) {
+                rod.style.left = window.innerWidth - rod.clientWidth + "px";
             }
+            if (e.pageY <= 0) {
+                rod.style.top = 0 + "px";
+            }
+            if (e.pageX <= 0) {
+                rod.style.left = 0 + "px";
+            }
+
+            /*
+                        //rod.style.transform = "translateY(" + e.pageY + "px)";
+                        //rod.style.transform = "translateX(" + e.pageX + "px)";
+                        rod.style.transform = "translate(" + e.pageX + "px ," + e.pageY + "px)";
+
+                        if (e.pageY >= window.innerHeight - rod.clientHeight) {
+                            rod.style.transform = "translateY(" + window.innerHeight - rod.clientHeight + "px)";
+                        }
+                        if (e.pageX >= window.innerWidth - rod.clientWidth) {
+                            rod.style.transform = "translateX(" + window.innerWidth - rod.clientWidth + "px)";
+                        }
+                        if (e.pageY <= 0) {
+                            rod.style.transform = "translateY(" + 0 + "px)";
+                        }
+                        if (e.pageX <= 0) {
+                            rod.style.transform = "translateX(" + 0 + "px)";
+                        }
+            */
+
+
         }
 
     </script>
